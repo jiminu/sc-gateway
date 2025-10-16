@@ -8,26 +8,33 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: eureka_route # 새로 추가할 라우트의 ID
+          uri: ${EUREKA_SVC_URI:http://localhost:9090} # 타겟 서비스의 URI
+          predicates:
+            - Path=/eureka # 매칭할 경로 (정확히 /hello)
+          filters:
+            - RewritePath=/eureka, /
+
         - id: hello_route # 새로 추가할 라우트의 ID
-          uri: ${HELLO_SVC_URI:http://localhost:8765} # 타겟 서비스의 URI
+          uri: ${HELLO_SVC_URI:http://localhost:9876} # 타겟 서비스의 URI
           predicates:
             - Path=/hello # 매칭할 경로 (정확히 /hello)
 
           # abc2hello_route
           # 1. http://localhost:9000/hello 로 들어오면
-          # 2. http://localhost:8765/hello 로 연결
+          # 2. http://localhost:9876/hello 로 연결
 
         - id: abc2hello_route # 새로 추가할 라우트의 ID
-          uri: ${HELLO_SVC_URI:http://localhost:8765} # 타겟 서비스의 URI
+          uri: ${HELLO_SVC_URI:http://localhost:9876} # 타겟 서비스의 URI
           predicates:
             - Path=/abc
 
           # abc2hello_route
           # 1. http://localhost:9000/abc 로 들어오면
-          # 2. http://localhost:8765/abc 로 연결
+          # 2. http://localhost:9876/abc 로 연결
 
         - id: def2hello_route # 새로 추가할 라우트의 ID
-          uri: ${HELLO_SVC_URI:http://localhost:8765} # 타겟 서비스의 URI
+          uri: ${HELLO_SVC_URI:http://localhost:9876} # 타겟 서비스의 URI
           predicates:
             - Path=/def
           filters:
@@ -36,7 +43,7 @@ spring:
           # def2hello_route
           # 1. http://localhost:9000/def 로 들어오면
           # 2. 필터에서 def 를 hello 로 바꾸어서 설정된 uri 로 보냄
-          # 3. http://localhost:8765/hello 로 연결
+          # 3. http://localhost:9876/hello 로 연결
 logging:
   level:
     # Spring Cloud Gateway의 라우팅, 필터 체인 관련 로그
