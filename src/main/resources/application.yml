@@ -54,3 +54,10 @@ logging:
     
     # Spring WebFlux (게이트웨이 기반 기술) 관련 로그
     org.springframework.web.reactive: DEBUG
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://sc-eureka:9090/eureka
