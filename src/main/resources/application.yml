@@ -8,6 +8,15 @@ spring:
   cloud:
     gateway:
       routes:
+        # Eureka에 등록된 'USER-SERVICE' 서비스로 라우팅하는 새로운 설정
+        - id: users_users_route # 통합된 라우트 ID
+          uri: lb://USER-SERVICE # USERS 서비스로 라우팅
+          predicates:
+            - Path=/api/users/** # 클라이언트 요청 경로 (뒤에 무엇이 오든 상관 없음)
+          filters:
+            # '/api/uuu' 접두사를 제거하고 남은 경로를 전달합니다.
+            - RewritePath=/api/users/(?<segment>.*), /${segment}
+
         - id: eureka_route # 새로 추가할 라우트의 ID
           uri: ${EUREKA_SVC_URI:http://localhost:9090} # 타겟 서비스의 URI
           predicates:
@@ -54,3 +63,10 @@ logging:
     
     # Spring WebFlux (게이트웨이 기반 기술) 관련 로그
     org.springframework.web.reactive: DEBUG
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://sc-eureka:9090/eureka
