@@ -69,4 +69,4 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://sc-eureka:9090/eureka
+      defaultZone: http://sc-eureka:8765/eureka
